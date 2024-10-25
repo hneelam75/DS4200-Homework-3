@@ -1,8 +1,8 @@
 // Load the data
-const iris = d3.csv("/Users/havishaneelamraju/Downloads/iris.csv");
+const iris = d3.csv("/Users/havishaneelamraju/DS-4200/DS4200-HW-3/UpdatedHW3/DS4200-Homework-3/iris.csv");
 
 // Once the data is loaded, proceed with plotting
-penguins.then(function(data) {
+iris.then(function(data) {
     // Convert string values to numbers
     data.forEach(function(d) {
         d.PetalLength = +d.PetalLength;
@@ -31,17 +31,17 @@ penguins.then(function(data) {
     // Set up scales for x and y axes
     // d3.min(data, d => d.bill_length_mm)-5
     const xScale = d3.scaleBand()
-                    .range([d.petalLength, d.petalWidth])
-                    .domain([data.map(d => d.Species)])
-                    .padding(0.5);
-    
+                     .range([margin.left, width - margin.right])
+                     .domain(data.map(d => d.Species))
+                     .padding(0.5);
+
     const yScale = d3.scaleLinear()
-                    .domain(petalWidth)
-                    .range([d.petalLength, d.petalWidth]);
+                     .domain([d3.min(data, d => d.PetalWidth), d3.max(data, d => d.PetalWidth)])
+                     .range([height - margin.bottom, margin.top]);
 
     const colorScale = d3.scaleOrdinal()
-        .domain(data.map(d => d.Species))
-        .range(d3.schemeCategory10);
+                         .domain(data.map(d => d.Species))
+                         .range(d3.schemeCategory10);
 
     // Add scales     
     let xAxis = svg.append('g')
@@ -61,7 +61,7 @@ penguins.then(function(data) {
                 .attr('cy', yScale(d.petalWidth))
                 .attr('r', 5)
                 .attr('stroke', 'black')
-                .attr('fill', d => d.Species);
+                .attr('fill', d => colorScale(d.Species));
 
     // Add x-axis label
     svg.append('text')
